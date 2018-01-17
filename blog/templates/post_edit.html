@@ -18,17 +18,13 @@
 			<!-- Article main content -->
 			<article class="col-sm-8 maincontent">
 				<header class="page-header">
-					<h1 class="page-title">News</h1>
+					<h1 class="page-title">Post editor</h1>
 				</header>
 					<div class="post">
-						<h3>{{ post.title }}</h3>
-						{% if user.is_authenticated %}
-							<a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-						{% endif %}
-						{% if post.published_date %}
-						<p><small><em>{{ post.published_date }}</small></em><p>
-						{% endif %}
-						<p>{{ post.text|linebreaksbr }}</p>
+						<form method="POST" class="post-form">{% csrf_token %}
+							{{ form.as_p }}
+							<button type="submit" class="save btn btn-default">Save</button>
+						</form>
 					</div>
 			</article>
 		</div>

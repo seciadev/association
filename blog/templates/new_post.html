@@ -22,9 +22,6 @@
 				</header>
 					<div class="post">
 						<h3>{{ post.title }}</h3>
-						{% if user.is_authenticated %}
-							<a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-						{% endif %}
 						{% if post.published_date %}
 						<p><small><em>{{ post.published_date }}</small></em><p>
 						{% endif %}
