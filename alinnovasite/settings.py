@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,13 +32,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'blog.apps.BlogConfig',
+	'social_django',
+	'core.apps.CoreConfig',
+	'django.contrib.admin',
+	#'django_facebook',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'alinnovasite.urls'
@@ -57,18 +62,53 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				#'django_facebook.context_processors.facebook', # <--
+				#'django.core.context_processors.request', #<--
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+				'social_django.context_processors.backends',  # <--
+				'social_django.context_processors.login_redirect', # <--
             ],
         },
     },
 ]
 
+
+
 WSGI_APPLICATION = 'alinnovasite.wsgi.application'
+
+AUTHENTICATION_BACKENDS = (
+	'social_core.backends.github.GithubOAuth2',
+	'social_core.backends.twitter.TwitterOAuth',
+	'social_core.backends.facebook.FacebookOAuth2',
+	'social_core.backends.linkedin.LinkedinOAuth',
+	'social_core.backends.linkedin.LinkedinOAuth2',
+	#'django_facebook.auth_backends.FacebookBackend',
+	'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_FACEBOOK_KEY = '1927682667549629'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '8789bbffcc7733918d9af5cb223d1ade'  # App Secret
+
+SOCIAL_AUTH_LINKEDIN_KEY = '77gumjzpziazln'
+SOCIAL_AUTH_LINKEDIN_SECRET = 'FMHMUvMuIDulNuHm'
+SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = ['r_basicprofile']
+SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = ['email-address', 'headline', 'industry']
+SOCIAL_AUTH_LINKEDIN_OAUTH2_EXTRA_DATA      = [
+    ('id', 'id'),
+    ('first-name', 'first_name'),
+    ('last-name', 'last_name'),
+    ('email-address', 'email_address'),
+    ('headline', 'headline'),
+    ('industry', 'industry')
+]
+FIELD_SELECTORS = ['email-address',]
+
+
 
 
 # Database
@@ -119,3 +159,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = 'home'

@@ -4,7 +4,7 @@ from .models import Post
 from .forms import PostForm
 
 
-def index(request):
+def home(request):
 	#posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
     # Generate counts of some of the main objects
 	num_posts=Post.objects.all().count()
@@ -22,9 +22,13 @@ def index(request):
 def about(request):
 	return render(request, 'about.html', {})
 	
+def login(request):
+	return render(request, 'login.html', {})
+	
 def news(request):
+	draftposts = Post.objects.filter(published_date__isnull=True).order_by('-created_date')
 	posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-	return render(request, 'news.html', {'posts': posts})
+	return render(request, 'news.html', {'posts': posts, 'draftposts':draftposts})
 	
 def post_detail(request, pk):
 	post = get_object_or_404(Post, pk=pk)
@@ -36,7 +40,7 @@ def post_new(request):
 		if form.is_valid():
 			post = form.save(commit=False)
 			post.author = request.user
-			post.published_date = timezone.now()
+			#post.published_date = timezone.now()
 			post.save()
 			return redirect('post_detail', pk=post.pk)
 	else:
@@ -51,9 +55,18 @@ def post_edit(request, pk):
 		if form.is_valid():
 			post = form.save(commit=False)
 			post.author = request.user
-			post.published_date = timezone.now()
+			if (post.published_date==None):
+				#do nothing
+				a=1
+			else:
+				post.published_date= timezone.now()
 			post.save()
 			return redirect('post_detail', pk=post.pk)
 	else:
 		form = PostForm(instance=post)
 	return render(request, 'post_edit.html', {'form': form})
+	
+def post_publish(request, pk):
+	post = get_object_or_404(Post, pk=pk)
+	post.publish()
+	return redirect('post_detail', pk=pk)

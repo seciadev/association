@@ -1,0 +1,41 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="{% url 'home' %}">Home</a></li>
+			<li class="active">Login</li>
+		</ol>
+		
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Login</h1>
+				</header>
+				
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+  <br>
+  {% url 'signup' as url %}
+  <p><a {% if request.path == url %} {% endif %} href="{{ url }}">Non sei ancora registrato? Registrati qui.</a></p>
+  <p><strong>Oppure accedi con:</strong></p>
+  <a href="{% url 'social:begin' 'linkedin' %}">Login con LinkedIn</a><br>
+  <a href="{% url 'social:begin' 'facebook' %}">Login con Facebook</a>
+  
+    </article>
+			<!-- /Article -->
+			
+
+		</div>
+	</div>	<!-- /container -->
+  
+{% endblock %}

@@ -8,25 +8,22 @@
 	<div class="container">
 
 		<ol class="breadcrumb">
-			<li><a href="{% url 'home' %}">Home</a></li>
+			<li><a href="{% url 'index' %}">Home</a></li>
 			<li><a href="{% url 'news' %}">News</a></li>
 			<li class="active">{{ pk }}</li>
 		</ol>
 
 		<div class="row">
 			
-			<!-- Article main content -->
-			<article class="col-sm-8 maincontent">
-				<header class="page-header">
-					<h1 class="page-title">Post editor</h1>
-				</header>
-					<div class="post">
-						<form method="POST" class="post-form">{% csrf_token %}
-							{{ form.as_p }}
-							<button type="submit" class="save btn btn-default">Save</button>
-						</form>
-					</div>
-			</article>
+			  <h2>Login</h2>
+			  <form method="post">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button type="submit">Login</button>
+			  </form>
+			  <br>
+			  <p><strong>-- OR --</strong></p>
+			  <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
 		</div>
 	</div>
 	
